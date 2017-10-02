@@ -1,0 +1,11 @@
+
+[x1,x2]=meshgrid(-10:0.01:10);
+f=x1^2-2*x1+1+x2^2+4*x2+4;
+g1=10-x1-10*x2;
+g2=10*x1-x2-10;
+
+
+mesh(x1,x2,f)
+hold on
+mesh(x1,x2,g1)
+mesh(x1,x2,g2)

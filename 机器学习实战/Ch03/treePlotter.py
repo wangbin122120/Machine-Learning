@@ -3,15 +3,18 @@ Created on Oct 14, 2010
 
 @author: Peter Harrington
 '''
+
 import matplotlib.pyplot as plt
 
-decisionNode = dict(boxstyle="sawtooth", fc="0.8")
+#定义决策节点和叶子节点的风格
+decisionNode = dict(boxstyle="sawtooth", fc="0.8")  #boxstyle = "swatooth"意思是注解框的边缘是波浪线型的，fc控制的注解框内的颜色深度
 leafNode = dict(boxstyle="round4", fc="0.8")
 arrow_args = dict(arrowstyle="<-")
 
+# 知道有多少个叶子节点，以便确定x轴的长度
 def getNumLeafs(myTree):
     numLeafs = 0
-    firstStr = myTree.keys()[0]
+    firstStr = list(myTree.keys())[0]
     secondDict = myTree[firstStr]
     for key in secondDict.keys():
         if type(secondDict[key]).__name__=='dict':#test to see if the nodes are dictonaires, if not they are leaf nodes
@@ -19,9 +22,10 @@ def getNumLeafs(myTree):
         else:   numLeafs +=1
     return numLeafs
 
+# 知道树有多少层，确定y轴的高度
 def getTreeDepth(myTree):
     maxDepth = 0
-    firstStr = myTree.keys()[0]
+    firstStr = list(myTree.keys())[0]
     secondDict = myTree[firstStr]
     for key in secondDict.keys():
         if type(secondDict[key]).__name__=='dict':#test to see if the nodes are dictonaires, if not they are leaf nodes
@@ -30,20 +34,23 @@ def getTreeDepth(myTree):
         if thisDepth > maxDepth: maxDepth = thisDepth
     return maxDepth
 
+# 绘制节点
 def plotNode(nodeTxt, centerPt, parentPt, nodeType):
     createPlot.ax1.annotate(nodeTxt, xy=parentPt,  xycoords='axes fraction',
              xytext=centerPt, textcoords='axes fraction',
              va="center", ha="center", bbox=nodeType, arrowprops=arrow_args )
-    
+
+# 绘制文本
 def plotMidText(cntrPt, parentPt, txtString):
     xMid = (parentPt[0]-cntrPt[0])/2.0 + cntrPt[0]
     yMid = (parentPt[1]-cntrPt[1])/2.0 + cntrPt[1]
     createPlot.ax1.text(xMid, yMid, txtString, va="center", ha="center", rotation=30)
 
+# 绘制决策树的主程序--绘制树型
 def plotTree(myTree, parentPt, nodeTxt):#if the first key tells you what feat was split on
     numLeafs = getNumLeafs(myTree)  #this determines the x width of this tree
     depth = getTreeDepth(myTree)
-    firstStr = myTree.keys()[0]     #the text label for this node should be this
+    firstStr = list(myTree.keys())[0]     #the text label for this node should be this
     cntrPt = (plotTree.xOff + (1.0 + float(numLeafs))/2.0/plotTree.totalW, plotTree.yOff)
     plotMidText(cntrPt, parentPt, nodeTxt)
     plotNode(firstStr, cntrPt, parentPt, decisionNode)
@@ -59,6 +66,7 @@ def plotTree(myTree, parentPt, nodeTxt):#if the first key tells you what feat wa
     plotTree.yOff = plotTree.yOff + 1.0/plotTree.totalD
 #if you do get a dictonary you know it's a tree, and the first element will be another dict
 
+# 绘制决策树的主程序--定义框架
 def createPlot(inTree):
     fig = plt.figure(1, facecolor='white')
     fig.clf()
@@ -79,6 +87,7 @@ def createPlot(inTree):
 #    plotNode('a leaf node', (0.8, 0.1), (0.3, 0.8), leafNode)
 #    plt.show()
 
+# 临时保存决策树
 def retrieveTree(i):
     listOfTrees =[{'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}},
                   {'no surfacing': {0: 'no', 1: {'flippers': {0: {'head': {0: 'no', 1: 'yes'}}, 1: 'no'}}}}

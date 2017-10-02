@@ -92,12 +92,14 @@ def classify(inputTree,featLabels,testVec):
     else: classLabel = valueOfFeat
     return classLabel
 
+# 使用pickle模块保存决策树
 def storeTree(inputTree,filename):
     import pickle
     fw = open(filename,'w')
     pickle.dump(inputTree,fw)
     fw.close()
-    
+
+# 使用pickle模块读取决策树
 def grabTree(filename):
     import pickle
     fr = open(filename)
